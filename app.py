@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 
 st.set_page_config(
     page_title="BankPredict AI",
-    page_icon="🌳",
+    page_icon="🏦",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -27,131 +27,261 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+    /* ---------- App shell ---------- */
     .stApp {
-        background: #f6f8fb;
+        background:
+            radial-gradient(circle at 0% 0%, rgba(37, 99, 235, .08), transparent 28%),
+            radial-gradient(circle at 100% 10%, rgba(14, 165, 233, .07), transparent 25%),
+            #f5f7fb;
     }
 
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-        max-width: 1400px;
+        padding-top: 1.5rem;
+        padding-bottom: 2.5rem;
+        max-width: 1450px;
     }
 
+    /* ---------- Sidebar ---------- */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0b1220 0%, #111827 55%, #172033 100%);
+        border-right: 1px solid rgba(255,255,255,.08);
+    }
+
+    section[data-testid="stSidebar"] * {
+        color: #f8fafc;
+    }
+
+    section[data-testid="stSidebar"] .stRadio label {
+        padding: 7px 8px;
+        border-radius: 9px;
+    }
+
+    .sidebar-brand {
+        padding: 8px 2px 18px 2px;
+    }
+
+    .sidebar-brand .brand-icon {
+        font-size: 30px;
+        margin-bottom: 4px;
+    }
+
+    .sidebar-brand h2 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: -.4px;
+    }
+
+    .sidebar-brand p {
+        margin: 4px 0 0 0;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    .creator-card {
+        margin-top: 18px;
+        padding: 14px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(255,255,255,.05);
+        border-radius: 14px;
+    }
+
+    .creator-card .label {
+        color: #94a3b8;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .8px;
+    }
+
+    .creator-card .name {
+        margin-top: 3px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    /* ---------- Hero ---------- */
     .hero {
-        background: linear-gradient(135deg, #111827 0%, #1f2937 55%, #374151 100%);
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0b1220 0%, #172554 55%, #1d4ed8 100%);
         padding: 34px 38px;
-        border-radius: 20px;
+        border-radius: 24px;
         color: white;
         margin-bottom: 26px;
-        box-shadow: 0 12px 35px rgba(15, 23, 42, .12);
+        box-shadow: 0 18px 45px rgba(15, 23, 42, .16);
+        border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .hero:after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        right: -55px;
+        top: -85px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.08);
+    }
+
+    .hero .eyebrow {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.10);
+        border: 1px solid rgba(255,255,255,.12);
+        color: #dbeafe;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
     }
 
     .hero h1 {
-        font-size: 38px;
-        margin: 0 0 8px 0;
-        font-weight: 750;
-        letter-spacing: -1px;
+        font-size: 42px;
+        line-height: 1.05;
+        margin: 0 0 9px 0;
+        font-weight: 800;
+        letter-spacing: -1.5px;
     }
 
     .hero p {
-        color: #d1d5db;
+        color: #dbeafe;
         font-size: 16px;
         margin: 0;
+        max-width: 720px;
+        line-height: 1.55;
+    }
+
+    /* ---------- Cards / sections ---------- */
+    .section-title {
+        font-size: 25px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 14px;
+        margin-bottom: 15px;
+        letter-spacing: -.5px;
+    }
+
+    .section-subtitle {
+        color: #64748b;
+        margin-top: -7px;
+        margin-bottom: 18px;
+        font-size: 14px;
+    }
+
+    .info-card, .prediction-card {
+        background: rgba(255,255,255,.96);
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 18px;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, .055);
+    }
+
+    .prediction-card {
+        padding: 28px;
     }
 
     .metric-card {
         background: white;
-        padding: 22px;
+        padding: 20px;
         border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 5px 18px rgba(15, 23, 42, .05);
-    }
-
-    .metric-label {
-        color: #6b7280;
-        font-size: 13px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: .5px;
-    }
-
-    .metric-value {
-        color: #111827;
-        font-size: 28px;
-        font-weight: 750;
-        margin-top: 5px;
-    }
-
-    .section-title {
-        font-size: 24px;
-        font-weight: 750;
-        color: #111827;
-        margin-top: 15px;
-        margin-bottom: 14px;
-    }
-
-    .info-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 22px;
-        margin-bottom: 18px;
-    }
-
-    .prediction-card {
-        background: white;
-        border-radius: 20px;
-        border: 1px solid #e5e7eb;
-        padding: 30px;
-        box-shadow: 0 8px 25px rgba(15, 23, 42, .06);
-    }
-
-    .result-yes {
-        background: #ecfdf5;
-        border: 1px solid #a7f3d0;
-        color: #065f46;
-        padding: 22px;
-        border-radius: 15px;
-        font-size: 18px;
-        font-weight: 650;
-        text-align: center;
-    }
-
-    .result-no {
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
-        color: #9a3412;
-        padding: 22px;
-        border-radius: 15px;
-        font-size: 18px;
-        font-weight: 650;
-        text-align: center;
-    }
-
-    .small-muted {
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    section[data-testid="stSidebar"] {
-        background: #111827;
-    }
-
-    section[data-testid="stSidebar"] * {
-        color: #f9fafb;
-    }
-
-    div.stButton > button {
-        border-radius: 10px;
-        min-height: 44px;
-        font-weight: 650;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, .05);
     }
 
     div[data-testid="stMetric"] {
         background: white;
-        border: 1px solid #e5e7eb;
-        padding: 14px;
-        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        padding: 16px 18px;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, .045);
+    }
+
+    div[data-testid="stMetricLabel"] {
+        color: #64748b !important;
+    }
+
+    div[data-testid="stMetricValue"] {
+        color: #0f172a !important;
+        font-weight: 800;
+    }
+
+    /* ---------- Inputs ---------- */
+    div[data-baseweb="select"] > div,
+    div[data-testid="stNumberInput"] input {
+        border-radius: 10px;
+    }
+
+    .stTextInput input:focus,
+    .stNumberInput input:focus {
+        border-color: #2563eb;
+    }
+
+    /* ---------- Buttons ---------- */
+    div.stButton > button,
+    div[data-testid="stFormSubmitButton"] button {
+        border-radius: 11px;
+        min-height: 46px;
+        font-weight: 750;
+        border: 0;
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    div[data-testid="stFormSubmitButton"] button {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+    }
+
+    div[data-testid="stFormSubmitButton"] button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 11px 25px rgba(37, 99, 235, .32);
+    }
+
+    /* ---------- Results ---------- */
+    .result-yes, .result-no {
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 17px;
+        font-weight: 750;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .result-yes {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        border: 1px solid #86efac;
+        color: #065f46;
+    }
+
+    .result-no {
+        background: linear-gradient(135deg, #fff7ed, #ffedd5);
+        border: 1px solid #fdba74;
+        color: #9a3412;
+    }
+
+    .small-muted {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .creator-footer {
+        text-align: center;
+        padding: 18px 0 4px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .creator-footer strong {
+        color: #1d4ed8;
+    }
+
+    /* ---------- Streamlit cleanup ---------- */
+    #MainMenu { visibility: hidden; }
+    footer { visibility: hidden; }
+    header[data-testid="stHeader"] {
+        background: transparent;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -203,8 +333,13 @@ except Exception as e:
 # =========================================================
 
 with st.sidebar:
-    st.markdown("## 🌳 BankPredict AI")
-    st.caption("Customer Subscription Intelligence")
+    st.markdown("""
+    <div class="sidebar-brand">
+        <div class="brand-icon">🏦</div>
+        <h2>BankPredict AI</h2>
+        <p>Customer Subscription Intelligence</p>
+    </div>
+    """, unsafe_allow_html=True)
     st.divider()
 
     page = st.radio(
@@ -225,6 +360,13 @@ with st.sidebar:
     st.caption("BANK MARKETING DATASET")
     st.write(f"{len(df):,} customer records")
 
+    st.markdown("""
+    <div class="creator-card">
+        <div class="label">Created by</div>
+        <div class="name">Shaurya Pandey</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # =========================================================
 # HEADER
@@ -232,8 +374,9 @@ with st.sidebar:
 
 st.markdown("""
 <div class="hero">
+    <div class="eyebrow">Banking Intelligence Platform</div>
     <h1>BankPredict AI</h1>
-    <p>AI-powered customer subscription prediction using Random Forest.</p>
+    <p>AI-powered customer subscription prediction using a Random Forest model, with analytics and model-performance insights in one dashboard.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -244,7 +387,7 @@ st.markdown("""
 
 if page == "Overview":
 
-    st.markdown('<div class="section-title">Business Overview</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Business Overview</div><div class="section-subtitle">A quick view of customer activity and subscription patterns.</div>', unsafe_allow_html=True)
 
     total = len(df)
     subscribed = int((df["y"].str.lower() == "yes").sum())
@@ -311,7 +454,7 @@ if page == "Overview":
 elif page == "Customer Prediction":
 
     st.markdown(
-        '<div class="section-title">Customer Subscription Assessment</div>',
+        '<div class="section-title">Customer Subscription Assessment</div><div class="section-subtitle">Enter customer and campaign details to generate an AI-assisted prediction.</div>',
         unsafe_allow_html=True
     )
 
@@ -500,7 +643,7 @@ elif page == "Customer Prediction":
 elif page == "Customer Analytics":
 
     st.markdown(
-        '<div class="section-title">Customer Analytics</div>',
+        '<div class="section-title">Customer Analytics</div><div class="section-subtitle">Explore relationships between customer attributes and term-deposit subscriptions.</div>',
         unsafe_allow_html=True
     )
 
@@ -605,7 +748,7 @@ elif page == "Customer Analytics":
 elif page == "Model Performance":
 
     st.markdown(
-        '<div class="section-title">Model Performance</div>',
+        '<div class="section-title">Model Performance</div><div class="section-subtitle">Evaluate the Random Forest model using test-set metrics and classification results.</div>',
         unsafe_allow_html=True
     )
 
@@ -681,7 +824,9 @@ elif page == "Model Performance":
 
 st.divider()
 
-st.caption(
-    "BankPredict AI • Random Forest Classification • "
-    "Bank Marketing Dataset"
-)
+st.markdown("""
+<div class="creator-footer">
+    BankPredict AI • Random Forest Classification • Bank Marketing Dataset<br>
+    Created by <strong>Shaurya Pandey</strong>
+</div>
+""", unsafe_allow_html=True)
