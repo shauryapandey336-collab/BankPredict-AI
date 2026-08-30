@@ -423,7 +423,7 @@ if page == "Overview":
         ax.set_ylabel("Customers")
         ax.set_title("Customer Subscription Distribution")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
         st.markdown("</div>", unsafe_allow_html=True)
@@ -438,13 +438,13 @@ if page == "Overview":
         ax.set_ylabel("Customers")
         ax.set_title("Age Distribution")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="section-title">Dataset Preview</div>', unsafe_allow_html=True)
-    st.dataframe(df.head(10), use_container_width=True, hide_index=True)
+    st.dataframe(df.head(10), width="stretch", hide_index=True)
 
 
 # =========================================================
@@ -577,7 +577,7 @@ elif page == "Customer Prediction":
 
         submitted = st.form_submit_button(
             "Predict Customer Outcome",
-            use_container_width=True,
+            width="stretch",
             type="primary"
         )
 
@@ -672,7 +672,7 @@ elif page == "Customer Analytics":
         ax.set_xlabel("Customers")
         ax.set_ylabel("Job")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
     elif analysis == "Education & Subscription":
@@ -688,7 +688,7 @@ elif page == "Customer Analytics":
         ax.set_xlabel("Education")
         ax.set_ylabel("Customers")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
     elif analysis == "Housing Loan & Subscription":
@@ -704,7 +704,7 @@ elif page == "Customer Analytics":
         ax.set_xlabel("Housing Loan")
         ax.set_ylabel("Customers")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
     elif analysis == "Previous Campaign Outcome":
@@ -720,7 +720,7 @@ elif page == "Customer Analytics":
         ax.set_xlabel("Previous Outcome")
         ax.set_ylabel("Customers")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
     elif analysis == "Balance Distribution":
@@ -737,7 +737,7 @@ elif page == "Customer Analytics":
         ax.set_xlabel("Balance")
         ax.set_ylabel("Customers")
         sns.despine()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, width="stretch")
         plt.close(fig)
 
 
@@ -790,7 +790,7 @@ elif page == "Model Performance":
             ax.set_xlabel("Predicted")
             ax.set_ylabel("Actual")
 
-            st.pyplot(fig, use_container_width=True)
+            st.pyplot(fig, width="stretch")
             plt.close(fig)
 
         with right:
@@ -807,7 +807,7 @@ elif page == "Model Performance":
 
             st.dataframe(
                 report_df.round(3),
-                use_container_width=True
+                width="stretch"
             )
 
     except FileNotFoundError:
